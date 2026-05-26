@@ -1,28 +1,21 @@
-#!/usr/bin/env python3
-import numpy as np
+import random
+import sys
 import os
 
-def generate_matrix(size, filename, min_val=-10, max_val=10):
-    """Генерация квадратной матрицы и сохранение в файл"""
-    matrix = np.random.uniform(min_val, max_val, (size, size))
-    
+def gen_matrix(n, filename):
+    """Генерация матрицы"""
+
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
     with open(filename, 'w') as f:
-        f.write(f"{size}\n")
-        for row in matrix:
-            f.write(" ".join(f"{x:.6f}" for x in row) + "\n")
-    
-    print(f"Сгенерирована матрица {size}x{size} -> {filename}")
-    return matrix
+        f.write(f"{n}\n")
+        for i in range(n):
+            row = [round(random.uniform(1.0, 10.0), 4) for _ in range(n)]
+            f.write(" ".join(map(str, row)) + "\n")
 
 if __name__ == "__main__":
-    # Создаём папку data если её нет
-    os.makedirs("lab1/data", exist_ok=True)
-    
-    # Размеры матриц для тестирования
-    sizes = [200, 400, 800, 1200, 1600, 2000]
-    
-    for size in sizes:
-        generate_matrix(size, f"lab1/data/matrixA_{size}.txt")
-        generate_matrix(size, f"lab1/data/matrixB_{size}.txt")
-    
-    print("\nГенерация завершена!")
+    n = int(sys.argv[1]) if len(sys.argv) > 1 else 100
+    print(f"Generating {n}x{n} matrices...")
+    gen_matrix(n, "data/matrixA.txt")
+    gen_matrix(n, "data/matrixB.txt")
+    print("Done!")
